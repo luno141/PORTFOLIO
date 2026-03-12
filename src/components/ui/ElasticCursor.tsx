@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { useMouse } from "@/hooks/use-mouse";
 import { usePreloader } from "../preloader";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { usePathname } from "next/navigation";
 function useTicker(callback: gsap.TickerCallback | undefined, paused: boolean) {
   useEffect(() => {
     if (!paused && callback) {
@@ -64,8 +63,6 @@ function runSetter(setter: Function | undefined, value: number) {
 }
 const CURSOR_DIAMETER = 50;
 function ElasticCursor() {
-  const pathname = usePathname();
-  const isBlogPost = pathname.startsWith("/blogs/") && pathname !== "/blogs";
   const { loadingPercent, isLoading } = usePreloader();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const jellyRef = useRef<HTMLDivElement>(null);
@@ -157,7 +154,7 @@ function ElasticCursor() {
     jellyRef.current.style.width = loadingPercent * 2 + "vw";
   }, [loadingPercent]);
   useTicker(loop, isLoading || !cursorMoved || isMobile);
-  if (isMobile || isBlogPost) return null;
+  if (isMobile) return null;
   return (
     <>
       <div

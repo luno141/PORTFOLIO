@@ -2,7 +2,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useMousePosition } from "@/utils/mouse";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
 interface ParticlesProps {
   className?: string;
   quantity?: number;
@@ -17,8 +16,6 @@ export default function Particles({
   ease = 50,
   refresh = false,
 }: ParticlesProps) {
-  const pathname = usePathname();
-  const isBlogPost = pathname.startsWith("/blogs/") && pathname !== "/blogs";
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const context = useRef<CanvasRenderingContext2D | null>(null);
@@ -34,7 +31,6 @@ export default function Particles({
   }>({ w: 0, h: 0 });
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
   useEffect(() => {
-    if (isBlogPost) return;
     if (canvasRef.current) {
       context.current = canvasRef.current.getContext("2d");
     }
@@ -44,7 +40,7 @@ export default function Particles({
     return () => {
       window.removeEventListener("resize", initCanvas);
     };
-  }, [isBlogPost]);
+  }, []);
   useEffect(() => {
     onMouseMove();
   }, [mousePosition.x, mousePosition.y]);
@@ -213,7 +209,6 @@ export default function Particles({
     });
     window.requestAnimationFrame(animate);
   };
-  if (isBlogPost) return null;
   return (
     <div
       className={cn(
