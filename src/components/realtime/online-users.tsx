@@ -152,43 +152,35 @@ const OnlineUsers = () => {
           )}
           side="top"
         >
-          <div
-            className={cn(
-              "flex items-center justify-between gap-3 px-4 py-3 shadow-sm border-b shrink-0",
-              THEME.bg.secondary,
-              THEME.border.primary,
-            )}
-          >
+          {isRealtimeEnabled ? (
             <div
               className={cn(
-                "flex min-w-0 items-center gap-3",
-                THEME.text.header,
+                "flex items-center justify-between gap-3 px-4 py-3 shadow-sm border-b shrink-0",
+                THEME.bg.secondary,
+                THEME.border.primary,
               )}
             >
               <div
                 className={cn(
-                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
-                  THEME.bg.tertiary,
+                  "flex min-w-0 items-center gap-3",
+                  THEME.text.header,
                 )}
               >
-                {isRealtimeEnabled ? (
+                <div
+                  className={cn(
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+                    THEME.bg.tertiary,
+                  )}
+                >
                   <BookText className={cn("h-5 w-5", THEME.text.secondary)} />
-                ) : (
-                  <Bot className={cn("h-5 w-5", THEME.text.secondary)} />
-                )}
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold">Guestbook</p>
+                  <p className={cn("truncate text-xs", THEME.text.secondary)}>
+                    Leave a short public note for Vikrant
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold">
-                  {isRealtimeEnabled ? "Guestbook" : "Portfolio Assistant"}
-                </p>
-                <p className={cn("truncate text-xs", THEME.text.secondary)}>
-                  {isRealtimeEnabled
-                    ? "Leave a short public note for Vikrant"
-                    : "Ask about projects, skills, resume, or contact"}
-                </p>
-              </div>
-            </div>
-            {isRealtimeEnabled ? (
               <div className="flex items-center gap-2">
                 {currentUser && (
                   <Button
@@ -239,8 +231,8 @@ const OnlineUsers = () => {
                   <Users className="w-5 h-5" />
                 </Button>
               </div>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
           <div
             className={cn("relative flex flex-col flex-1", THEME.bg.primary)}

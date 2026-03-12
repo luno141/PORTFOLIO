@@ -14,10 +14,25 @@ export type PortfolioBotReply = {
 };
 
 const DEFAULT_SUGGESTIONS = [
-  "What do you build?",
-  "Show me your projects",
-  "What are your strongest skills?",
-  "How can I contact you?",
+  "What does Vikrant build?",
+  "Show me Vikrant's projects",
+  "What are Vikrant's strongest skills?",
+  "How do I contact Vikrant?",
+];
+
+const HELP_PROMPTS = [
+  "What does Vikrant build?",
+  "Who is Vikrant?",
+  "Show me Vikrant's projects",
+  "What are Vikrant's strongest skills?",
+  "Is Vikrant available for work?",
+  "Open Vikrant's resume",
+  "How do I contact Vikrant?",
+  "Tell me about North Star",
+  "Tell me about MediMind",
+  "Tell me about Bet0verse",
+  "Tell me about NeuroAssist",
+  "Tell me about the C++ Ray Tracer",
 ];
 
 const PROJECT_SUGGESTIONS = projects
@@ -32,6 +47,8 @@ const normalize = (value: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
+const toWords = (value: string) => normalize(value).split(" ").filter(Boolean);
+
 const dedupe = (items: string[]) => Array.from(new Set(items));
 
 const strongestSkills = dedupe(
@@ -40,6 +57,11 @@ const strongestSkills = dedupe(
 
 const hasAny = (input: string, terms: string[]) =>
   terms.some((term) => input.includes(term));
+
+const hasGreeting = (input: string) => {
+  const greetings = new Set(["hello", "hi", "hey", "yo"]);
+  return toWords(input).some((word) => greetings.has(word));
+};
 
 const findProject = (input: string) =>
   projects.find((project) => {
@@ -99,9 +121,9 @@ const buildProjectReply = (projectId: string): PortfolioBotReply => {
         : []),
     ],
     suggestions: [
-      "Show me your projects",
-      "What are your strongest skills?",
-      "How can I contact you?",
+      "Show me Vikrant's projects",
+      "What are Vikrant's strongest skills?",
+      "How do I contact Vikrant?",
     ],
   };
 };
@@ -114,9 +136,10 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     return buildProjectReply(matchedProject.id);
   }
 
-  if (hasAny(input, ["hello", "hi", "hey", "yo"])) {
+  if (hasGreeting(input)) {
     return {
-      content: "Hey.",
+      content:
+        "Hey. Ask about projects, skills, resume, availability, or contact.",
       suggestions: DEFAULT_SUGGESTIONS,
     };
   }
@@ -133,18 +156,24 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
       content: `${config.author} is a BCA student and product-focused developer. ${config.about.shortBio} ${config.about.paragraphs.join(" ")}`,
       actions: [{ label: "Open About", href: "/about" }],
       suggestions: [
-        "What do you build?",
-        "What are your strongest skills?",
-        "Are you available for work?",
+        "What does Vikrant build?",
+        "What are Vikrant's strongest skills?",
+        "Is Vikrant available for work?",
       ],
     };
   }
 
   if (
     hasAny(input, [
+      "what does luno build",
+      "what does vikrant build",
       "what do you build",
       "what are you building",
+      "what does luno do",
+      "what does vikrant do",
       "what do you do",
+      "what is luno building",
+      "what is vikrant building",
       "currently building",
     ])
   ) {
@@ -153,7 +182,11 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
         .map((item) => `${item.title}: ${item.summary}`)
         .join(" ")}`,
       actions: [{ label: "See Projects", href: "/projects" }],
-      suggestions: PROJECT_SUGGESTIONS,
+      suggestions: [
+        "Tell me about North Star",
+        "Tell me about MediMind",
+        "Show me Vikrant's projects",
+      ],
     };
   }
 
@@ -172,7 +205,7 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
       )}. Stack highlights: ${strongestSkills.join(", ")}.`,
       actions: [{ label: "Open About", href: "/about" }],
       suggestions: [
-        "Show me your projects",
+        "Show me Vikrant's projects",
         "Tell me about North Star",
         "Tell me about the C++ Ray Tracer",
       ],
@@ -193,7 +226,11 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
         .map((project) => `${project.title} (${project.category})`)
         .join(", ")}.`,
       actions: [{ label: "Open Projects", href: "/projects" }],
-      suggestions: PROJECT_SUGGESTIONS,
+      suggestions: [
+        "Tell me about North Star",
+        "Tell me about MediMind",
+        "Tell me about Bet0verse",
+      ],
     };
   }
 
@@ -202,9 +239,9 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
       content: "You can open Vikrant's resume directly from the portfolio.",
       actions: [{ label: "Open Resume", href: config.resume }],
       suggestions: [
-        "How can I contact you?",
-        "Are you available for work?",
-        "Show me your projects",
+        "How do I contact Vikrant?",
+        "Is Vikrant available for work?",
+        "Show me Vikrant's projects",
       ],
     };
   }
@@ -232,9 +269,9 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
         { label: "GitHub", href: config.social.github, external: true },
       ],
       suggestions: [
-        "Are you available for work?",
-        "Open resume",
-        "Show me your projects",
+        "Is Vikrant available for work?",
+        "Open Vikrant's resume",
+        "Show me Vikrant's projects",
       ],
     };
   }
@@ -264,9 +301,9 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
         },
       ],
       suggestions: [
-        "Open resume",
-        "Show me your projects",
-        "What are your strongest skills?",
+        "Open Vikrant's resume",
+        "Show me Vikrant's projects",
+        "What are Vikrant's strongest skills?",
       ],
     };
   }
@@ -281,7 +318,7 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
 
   if (hasAny(input, ["help", "what can you do"])) {
     return {
-      content: "Ask about projects, resume, skills, availability, or contact.",
+      content: `Try these prompts: ${HELP_PROMPTS.join(". ")}.`,
       suggestions: DEFAULT_SUGGESTIONS,
     };
   }
@@ -291,3 +328,9 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     suggestions: DEFAULT_SUGGESTIONS,
   };
 };
+
+export const getPortfolioBotWelcome = (): PortfolioBotReply => ({
+  content:
+    `Hey. Try asking: ${HELP_PROMPTS.join(". ")}.`,
+  suggestions: DEFAULT_SUGGESTIONS,
+});

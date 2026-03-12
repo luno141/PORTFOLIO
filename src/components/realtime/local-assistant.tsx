@@ -10,6 +10,7 @@ import { ChatInput } from "./components/chat-input";
 import { THEME } from "./constants";
 import {
   getPortfolioBotReply,
+  getPortfolioBotWelcome,
   type PortfolioBotAction,
 } from "@/lib/portfolio-bot";
 import { useSounds } from "./hooks/use-sounds";
@@ -22,7 +23,7 @@ type LocalAssistantMessage = {
   suggestions?: string[];
 };
 
-const STORAGE_KEY = "portfolio-local-assistant-messages-v2";
+const STORAGE_KEY = "portfolio-local-assistant-messages-v3";
 
 const createMessage = (
   role: LocalAssistantMessage["role"],
@@ -37,8 +38,20 @@ const createMessage = (
   suggestions,
 });
 
+const createWelcomeMessage = () => {
+  const welcome = getPortfolioBotWelcome();
+  return createMessage(
+    "assistant",
+    welcome.content,
+    welcome.actions,
+    welcome.suggestions,
+  );
+};
+
 const LocalAssistant = () => {
-  const [messages, setMessages] = useState<LocalAssistantMessage[]>([]);
+  const [messages, setMessages] = useState<LocalAssistantMessage[]>([
+    createWelcomeMessage(),
+  ]);
   const [isThinking, setIsThinking] = useState(false);
   const [hasHydrated, setHasHydrated] = useState(false);
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -119,7 +132,7 @@ const LocalAssistant = () => {
       timeoutRef.current = null;
     }
 
-    setMessages([]);
+    setMessages([createWelcomeMessage()]);
     setIsThinking(false);
     window.localStorage.removeItem(STORAGE_KEY);
   };
@@ -151,7 +164,7 @@ const LocalAssistant = () => {
             </div>
             <div className="space-y-1">
               <p className={cn("text-sm font-semibold", THEME.text.header)}>
-                BT
+                BT-ASSISTANT
               </p>
             </div>
           </div>
@@ -267,8 +280,8 @@ const LocalAssistant = () => {
                 )}
               >
                 <div className="flex items-center gap-2">
-                    <span className={cn("text-sm", THEME.text.secondary)}>
-                    BT is thinking
+                  <span className={cn("text-sm", THEME.text.secondary)}>
+                    BT-ASSISTANT is thinking
                   </span>
                   <div className="flex items-center gap-1">
                     <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
@@ -297,7 +310,7 @@ const LocalAssistant = () => {
       <ChatInput
         onSendMessage={sendMessage}
         onTyping={() => {}}
-        placeholder="Type a message..."
+        placeholder="What does Vikrant build?"
       />
     </div>
   );
