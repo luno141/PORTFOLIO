@@ -12,20 +12,22 @@ function Footer() {
         © {year} {config.author}. All rights reserved.
       </p>
       <SocialMediaButtons />
-      <nav className="flex gap-4 sm:gap-6 z-10">
-        {footer.map((link, index) => {
-          const { title, href } = link;
-          return (
-            <Link
-              className="text-xs underline-offset-4 hover:underline"
-              href={href}
-              key={`l_${index}`}
-            >
-              <Button variant={"link"}>{title}</Button>
-            </Link>
-          );
-        })}
-      </nav>
+      {footer.length > 0 ? (
+        <nav className="z-10 flex gap-4 sm:gap-6">
+          {footer.map((link, index) => {
+            const { title, href } = link;
+            return (
+              <Link
+                className="text-xs underline-offset-4 hover:underline"
+                href={href}
+                key={`l_${index}`}
+              >
+                <Button variant="link">{title}</Button>
+              </Link>
+            );
+          })}
+        </nav>
+      ) : null}
     </footer>
   );
 }
