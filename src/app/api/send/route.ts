@@ -8,6 +8,18 @@ const Email = z.object({
   focus: z.string().max(120).optional().default(""),
   message: z.string().min(10, "Message is too short!"),
 });
+
+export async function GET() {
+  return Response.json(
+    { enabled: Boolean(process.env.RESEND_API_KEY) },
+    {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    },
+  );
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

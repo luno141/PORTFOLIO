@@ -1,5 +1,5 @@
 "use client";
-import { Check, ChevronRight, Loader2 } from "lucide-react";
+import { Check, ChevronRight, Github, Linkedin, Loader2, Mail } from "lucide-react";
 import React from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/ace-input";
@@ -18,13 +18,45 @@ const ContactForm = () => {
   const [email, setEmail] = React.useState("");
   const [focus, setFocus] = React.useState("");
   const [message, setMessage] = React.useState("");
+  const [emailEnabled, setEmailEnabled] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
   const [submitState, setSubmitState] = React.useState<
     "idle" | "success" | "error"
   >("idle");
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    const loadAvailability = async () => {
+      try {
+        const res = await fetch("/api/send", {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        if (!res.ok) return;
+
+        const data = (await res.json()) as { enabled?: boolean };
+
+        if (mounted && typeof data.enabled === "boolean") {
+          setEmailEnabled(data.enabled);
+        }
+      } catch {
+        return;
+      }
+    };
+
+    loadAvailability();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!emailEnabled) return;
     setLoading(true);
     setSubmitState("idle");
     setFeedbackMessage("");
@@ -52,6 +84,9 @@ const ContactForm = () => {
       setFocus("");
       setMessage("");
     } catch (err) {
+      if (err instanceof Error && err.message === "Missing RESEND_API_KEY") {
+        setEmailEnabled(false);
+      }
       setSubmitState("error");
       setFeedbackMessage(
         err instanceof Error
@@ -62,6 +97,50 @@ const ContactForm = () => {
       setLoading(false);
     }
   };
+
+  if (!emailEnabled) {
+    return (
+      <div className="space-y-5">
+        <div className="rounded-2xl border border-border bg-background/60 px-4 py-4 text-sm text-muted-foreground">
+          The contact form is offline right now. Email is the fastest path, and
+          LinkedIn works well for role or collaboration outreach.
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <Button asChild>
+            <a href={`mailto:${config.email}`}>
+              <Mail className="mr-2 h-4 w-4" />
+              Email Vikrant
+            </a>
+          </Button>
+
+          <Button asChild variant="outline">
+            <a
+              href={config.social.linkedin}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Linkedin className="mr-2 h-4 w-4" />
+              LinkedIn
+            </a>
+          </Button>
+
+          <Button asChild variant="outline">
+            <a href={config.social.github} target="_blank" rel="noreferrer">
+              <Github className="mr-2 h-4 w-4" />
+              GitHub
+            </a>
+          </Button>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-background/40 px-4 py-4 text-sm text-muted-foreground">
+          Best message format: what you are building or hiring for, the scope,
+          the timeline, and the type of help you need.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <form className="min-w-7xl mx-auto sm:mt-4" onSubmit={handleSubmit}>
       <div className="mb-5 space-y-3">

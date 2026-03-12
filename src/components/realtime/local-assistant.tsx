@@ -6,7 +6,6 @@ import { Bot, RotateCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { ChatInput } from "./components/chat-input";
 import { THEME } from "./constants";
 import {
   getPortfolioBotReply,
@@ -181,7 +180,7 @@ const LocalAssistant = () => {
         </div>
       </div>
 
-      <ScrollArea className="h-[360px] flex-1" data-lenis-prevent>
+      <ScrollArea className="flex-1" data-lenis-prevent>
         <div className="space-y-4 p-4">
           {messages.map((message) => {
             const isAssistant = message.role === "assistant";
@@ -295,23 +294,6 @@ const LocalAssistant = () => {
           <div ref={scrollAnchorRef} />
         </div>
       </ScrollArea>
-
-      <div
-        className={cn(
-          "border-t px-4 py-3 text-xs",
-          THEME.bg.secondary,
-          THEME.border.primary,
-          THEME.text.secondary,
-        )}
-      >
-        &nbsp;
-      </div>
-
-      <ChatInput
-        onSendMessage={sendMessage}
-        onTyping={() => {}}
-        placeholder="What does Vikrant build?"
-      />
     </div>
   );
 };
