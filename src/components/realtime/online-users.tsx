@@ -146,7 +146,7 @@ const OnlineUsers = () => {
         </PopoverTrigger>
         <PopoverContent
           className={cn(
-            "w-80 min-h-[400px] sm:w-96 p-0 border-none shadow-2xl overflow-hidden rounded-xl mr-4 mb-4 flex flex-col",
+            "mr-4 mb-4 flex h-[520px] min-h-0 max-h-[70vh] w-80 flex-col overflow-hidden rounded-xl border-none p-0 shadow-2xl sm:w-96",
             THEME.bg.primary,
             THEME.text.primary,
           )}
@@ -235,7 +235,10 @@ const OnlineUsers = () => {
           ) : null}
 
           <div
-            className={cn("relative flex flex-col flex-1", THEME.bg.primary)}
+            className={cn(
+              "relative flex min-h-0 flex-1 flex-col",
+              THEME.bg.primary,
+            )}
           >
             {isRealtimeEnabled ? (
               <>

@@ -16,22 +16,21 @@ import { useSounds } from "./hooks/use-sounds";
 
 type LocalAssistantMessage = {
   id: string;
-  role: "assistant" | "user";
+  role: "assistant";
   content: string;
   actions?: PortfolioBotAction[];
   suggestions?: string[];
 };
 
-const STORAGE_KEY = "portfolio-local-assistant-messages-v3";
+const STORAGE_KEY = "portfolio-local-assistant-messages-v4";
 
 const createMessage = (
-  role: LocalAssistantMessage["role"],
   content: string,
   actions?: PortfolioBotAction[],
   suggestions?: string[],
 ): LocalAssistantMessage => ({
-  id: `${role}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-  role,
+  id: `assistant-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  role: "assistant",
   content,
   actions,
   suggestions,
@@ -40,7 +39,6 @@ const createMessage = (
 const createWelcomeMessage = () => {
   const welcome = getPortfolioBotWelcome();
   return createMessage(
-    "assistant",
     welcome.content,
     welcome.actions,
     welcome.suggestions,
@@ -101,7 +99,6 @@ const LocalAssistant = () => {
     if (!trimmed || isThinking) return;
 
     playSendSound();
-    setMessages((prev) => [...prev, createMessage("user", trimmed)]);
     setIsThinking(true);
 
     const reply = getPortfolioBotReply(trimmed);
@@ -114,7 +111,6 @@ const LocalAssistant = () => {
       setMessages((prev) => [
         ...prev,
         createMessage(
-          "assistant",
           reply.content,
           reply.actions,
           reply.suggestions,
@@ -143,7 +139,7 @@ const LocalAssistant = () => {
   );
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       <div
         className={cn(
           "border-b px-4 py-3",
@@ -180,53 +176,46 @@ const LocalAssistant = () => {
         </div>
       </div>
 
-      <ScrollArea className="flex-1" data-lenis-prevent>
+      <ScrollArea
+        className="min-h-0 flex-1"
+        data-lenis-prevent
+        onWheelCapture={(event) => event.stopPropagation()}
+        onTouchMoveCapture={(event) => event.stopPropagation()}
+      >
         <div className="space-y-4 p-4">
           {messages.map((message) => {
-            const isAssistant = message.role === "assistant";
             const isLastAssistant =
-              isAssistant &&
               lastAssistantMessage &&
               lastAssistantMessage.id === message.id &&
               !isThinking;
 
             return (
-              <div
-                key={message.id}
-                className={cn(
-                  "flex gap-3",
-                  isAssistant ? "justify-start" : "justify-end",
-                )}
-              >
-                {isAssistant ? (
-                  <div
-                    className={cn(
-                      "mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-                      THEME.bg.tertiary,
-                    )}
-                  >
-                    <Bot className={cn("h-4 w-4", THEME.text.secondary)} />
-                  </div>
-                ) : null}
-
+              <div key={message.id} className="flex gap-3">
+                <div
+                  className={cn(
+                    "mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+                    THEME.bg.tertiary,
+                  )}
+                >
+                  <Bot className={cn("h-4 w-4", THEME.text.secondary)} />
+                </div>
                 <div
                   className={cn(
                     "max-w-[85%] space-y-3 rounded-2xl border px-4 py-3",
-                    isAssistant
-                      ? cn(THEME.bg.secondary, THEME.border.primary)
-                      : "border-[#5865f2]/20 bg-[#5865f2] text-white",
+                    THEME.bg.secondary,
+                    THEME.border.primary,
                   )}
                 >
                   <p
                     className={cn(
                       "whitespace-pre-wrap text-sm leading-6",
-                      isAssistant ? THEME.text.primary : "text-white",
+                      THEME.text.primary,
                     )}
                   >
                     {message.content}
                   </p>
 
-                  {isAssistant && message.actions?.length ? (
+                  {message.actions?.length ? (
                     <div className="flex flex-wrap gap-2">
                       {message.actions.map((action) => (
                         <ActionButton
@@ -278,15 +267,10 @@ const LocalAssistant = () => {
                   THEME.border.primary,
                 )}
               >
-                <div className="flex items-center gap-2">
-                  <span className={cn("text-sm", THEME.text.secondary)}>
-                    BT-ASSISTANT is thinking
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current" />
-                  </div>
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current" />
                 </div>
               </div>
             </div>
