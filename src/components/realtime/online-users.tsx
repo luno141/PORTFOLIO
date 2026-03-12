@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { motion } from "framer-motion";
 import { SocketContext } from "@/contexts/socketio";
-import { ArrowUpRight, BookText, Mail, Settings, Users } from "lucide-react";
+import { BookText, Bot, Settings, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useChatScroll } from "./hooks/use-chat-scroll";
 import { useTyping } from "./hooks/use-typing";
@@ -19,7 +19,7 @@ import { UserList } from "./components/user-list";
 import { EditProfileModal } from "./components/edit-profile-modal";
 import { THEME } from "./constants";
 import { getAvatarUrl } from "@/lib/avatar";
-import { config } from "@/data/config";
+import LocalAssistant from "./local-assistant";
 
 const OnlineUsers = () => {
   const { socket, users: _users, msgs } = useContext(SocketContext);
@@ -137,7 +137,11 @@ const OnlineUsers = () => {
                       : "bg-transparent",
                   )}
                 />
-                <BookText className="w-6 h-6" />
+                {isRealtimeEnabled ? (
+                  <BookText className="w-6 h-6" />
+                ) : (
+                  <Bot className="w-6 h-6" />
+                )}
               </div>
 
               {isRealtimeEnabled ? (
@@ -184,14 +188,20 @@ const OnlineUsers = () => {
                   THEME.bg.tertiary,
                 )}
               >
-                <BookText className={cn("h-5 w-5", THEME.text.secondary)} />
+                {isRealtimeEnabled ? (
+                  <BookText className={cn("h-5 w-5", THEME.text.secondary)} />
+                ) : (
+                  <Bot className={cn("h-5 w-5", THEME.text.secondary)} />
+                )}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold">Guestbook</p>
+                <p className="truncate text-sm font-semibold">
+                  {isRealtimeEnabled ? "Guestbook" : "Portfolio Assistant"}
+                </p>
                 <p className={cn("truncate text-xs", THEME.text.secondary)}>
                   {isRealtimeEnabled
                     ? "Leave a short public note for Vikrant"
-                    : "Direct notes for now, hosted guestbook later"}
+                    : "Ask about projects, skills, resume, or contact"}
                 </p>
               </div>
             </div>
@@ -282,131 +292,7 @@ const OnlineUsers = () => {
                 />
               </>
             ) : (
-              <div className="flex flex-1 flex-col justify-between p-4">
-                <div className="space-y-4">
-                  <div
-                    className={cn(
-                      "rounded-2xl border p-4",
-                      THEME.bg.secondary,
-                      THEME.border.primary,
-                    )}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className={cn(
-                          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-                          THEME.bg.tertiary,
-                        )}
-                      >
-                        <BookText
-                          className={cn("h-5 w-5", THEME.text.secondary)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <p
-                          className={cn(
-                            "text-sm font-semibold",
-                            THEME.text.header,
-                          )}
-                        >
-                          Guestbook is paused on this deploy
-                        </p>
-                        <p
-                          className={cn(
-                            "text-sm leading-6",
-                            THEME.text.secondary,
-                          )}
-                        >
-                          To keep the site Vercel-friendly for now, the realtime
-                          guestbook backend is turned off. You can still reach
-                          out directly and I can swap this to a persistent
-                          guestbook later.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3">
-                    <a
-                      href={`mailto:${config.email}`}
-                      className={cn(
-                        "flex items-center justify-between rounded-2xl border px-4 py-3 transition-colors",
-                        THEME.bg.secondary,
-                        THEME.border.primary,
-                        "hover:bg-background/80",
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={cn(
-                            "flex h-9 w-9 items-center justify-center rounded-full",
-                            THEME.bg.tertiary,
-                          )}
-                        >
-                          <Mail
-                            className={cn("h-4 w-4", THEME.text.secondary)}
-                          />
-                        </div>
-                        <div>
-                          <p
-                            className={cn(
-                              "text-sm font-medium",
-                              THEME.text.header,
-                            )}
-                          >
-                            Email Vikrant
-                          </p>
-                          <p className={cn("text-xs", THEME.text.secondary)}>
-                            {config.email}
-                          </p>
-                        </div>
-                      </div>
-                      <ArrowUpRight className="h-4 w-4" />
-                    </a>
-
-                    {config.social.linkedin ? (
-                      <a
-                        href={config.social.linkedin}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={cn(
-                          "flex items-center justify-between rounded-2xl border px-4 py-3 transition-colors",
-                          THEME.bg.secondary,
-                          THEME.border.primary,
-                          "hover:bg-background/80",
-                        )}
-                      >
-                        <div>
-                          <p
-                            className={cn(
-                              "text-sm font-medium",
-                              THEME.text.header,
-                            )}
-                          >
-                            Message on LinkedIn
-                          </p>
-                          <p className={cn("text-xs", THEME.text.secondary)}>
-                            Use this for a quick intro or project note
-                          </p>
-                        </div>
-                        <ArrowUpRight className="h-4 w-4" />
-                      </a>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div
-                  className={cn(
-                    "rounded-2xl border px-4 py-3 text-sm",
-                    THEME.bg.secondary,
-                    THEME.border.primary,
-                    THEME.text.secondary,
-                  )}
-                >
-                  Next upgrade: a database-backed guestbook that works on Vercel
-                  without a separate websocket server.
-                </div>
-              </div>
+              <LocalAssistant />
             )}
           </div>
         </PopoverContent>
