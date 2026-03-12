@@ -7,6 +7,7 @@ interface LenisProps {
 }
 function SmoothScroll({ children, isInsideModal = false }: LenisProps) {
   const lenis = useLenis(({ scroll }) => {});
+
   useEffect(() => {
     document.addEventListener("DOMContentLoaded", () => {
       lenis?.stop();
@@ -20,8 +21,11 @@ function SmoothScroll({ children, isInsideModal = false }: LenisProps) {
         duration: 2,
         prevent: (node) => {
           if (isInsideModal) return true;
-          const modalOpen = node.classList.contains("modall");
-          return modalOpen;
+          if (!(node instanceof HTMLElement)) return false;
+          return Boolean(
+            node.closest("[data-lenis-prevent]") ||
+              node.classList.contains("modall"),
+          );
         },
       }}
     >

@@ -84,6 +84,8 @@ const findProject = (input: string) =>
     return aliases.some((alias) => alias.length > 2 && input.includes(alias));
   });
 
+const topSkills = strongestSkills.slice(0, 8).join(", ");
+
 const buildProjectReply = (projectId: string): PortfolioBotReply => {
   const project = projects.find((item) => item.id === projectId);
 
@@ -95,10 +97,10 @@ const buildProjectReply = (projectId: string): PortfolioBotReply => {
     };
   }
 
-  const techPreview = project.tech.slice(0, 4).join(", ");
+  const techPreview = project.tech.slice(0, 3).join(", ");
 
   return {
-    content: `${project.title} is a ${project.category.toLowerCase()} project where Vikrant worked as ${project.role.toLowerCase()}. ${project.summary} Current status: ${project.status}. Core stack: ${techPreview}.`,
+    content: `${project.title} is Vikrant's ${project.category.toLowerCase()} project. Stack: ${techPreview}. Use the case study for the full breakdown.`,
     actions: [
       { label: "Open Case Study", href: `/projects/${project.id}` },
       ...(project.repo
@@ -138,9 +140,8 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
 
   if (hasGreeting(input)) {
     return {
-      content:
-        "Hey. Ask about projects, skills, resume, availability, or contact.",
-      suggestions: DEFAULT_SUGGESTIONS,
+      content: "Hey.",
+      suggestions: HELP_PROMPTS,
     };
   }
 
@@ -153,8 +154,12 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     ])
   ) {
     return {
-      content: `${config.author} is a BCA student and product-focused developer. ${config.about.shortBio} ${config.about.paragraphs.join(" ")}`,
-      actions: [{ label: "Open About", href: "/about" }],
+      content:
+        "Vikrant is a product-focused developer building across web, AI, graphics, and Web3.",
+      actions: [
+        { label: "Open About", href: "/about" },
+        { label: "See Projects", href: "/projects" },
+      ],
       suggestions: [
         "What does Vikrant build?",
         "What are Vikrant's strongest skills?",
@@ -178,10 +183,12 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     ])
   ) {
     return {
-      content: `Vikrant builds across full-stack web, AI systems, graphics, and Web3-oriented product ideas. Right now the main focus is ${config.currentlyBuilding
-        .map((item) => `${item.title}: ${item.summary}`)
-        .join(" ")}`,
-      actions: [{ label: "See Projects", href: "/projects" }],
+      content:
+        "Vikrant builds full-stack, AI, graphics, and Web3-oriented products.",
+      actions: [
+        { label: "See Projects", href: "/projects" },
+        { label: "Open About", href: "/about" },
+      ],
       suggestions: [
         "Tell me about North Star",
         "Tell me about MediMind",
@@ -200,10 +207,11 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     ])
   ) {
     return {
-      content: `Strongest working areas: ${config.statusHighlights.join(
-        "; ",
-      )}. Stack highlights: ${strongestSkills.join(", ")}.`,
-      actions: [{ label: "Open About", href: "/about" }],
+      content: `Core stack: ${topSkills}.`,
+      actions: [
+        { label: "Open About", href: "/about" },
+        { label: "See Projects", href: "/projects" },
+      ],
       suggestions: [
         "Show me Vikrant's projects",
         "Tell me about North Star",
@@ -222,9 +230,8 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     ])
   ) {
     return {
-      content: `Main projects right now: ${projects
-        .map((project) => `${project.title} (${project.category})`)
-        .join(", ")}.`,
+      content:
+        "Main projects: North Star, MediMind, Bet0verse, NeuroAssist, and the C++ Ray Tracer.",
       actions: [{ label: "Open Projects", href: "/projects" }],
       suggestions: [
         "Tell me about North Star",
@@ -236,7 +243,7 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
 
   if (hasAny(input, ["resume", "cv", "download resume", "open resume"])) {
     return {
-      content: "You can open Vikrant's resume directly from the portfolio.",
+      content: "Open Vikrant's resume here.",
       actions: [{ label: "Open Resume", href: config.resume }],
       suggestions: [
         "How do I contact Vikrant?",
@@ -257,8 +264,7 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     ])
   ) {
     return {
-      content:
-        "Best direct path is email. LinkedIn and GitHub are also linked here if you want to continue the conversation there.",
+      content: "Best direct path is email. LinkedIn and GitHub are here too.",
       actions: [
         { label: "Email", href: `mailto:${config.email}`, external: true },
         {
@@ -287,7 +293,8 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
     ])
   ) {
     return {
-      content: `${config.availability.headline} ${config.availability.summary} ${config.availability.responseTime}`,
+      content:
+        "Vikrant is open to internships, collaborations, and product-focused roles.",
       actions: [
         {
           label: "Email Vikrant",
@@ -310,27 +317,29 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
 
   if (hasAny(input, ["cat", "keyboard", "bongo"])) {
     return {
-      content:
-        "The cat behind the keyboard is permanent staff. It handles morale, percussion, and questionable deployment decisions.",
+      content: "The cat is part of the setup.",
       suggestions: DEFAULT_SUGGESTIONS,
     };
   }
 
   if (hasAny(input, ["help", "what can you do"])) {
     return {
-      content: `Try these prompts: ${HELP_PROMPTS.join(". ")}.`,
-      suggestions: DEFAULT_SUGGESTIONS,
+      content: "Hey.",
+      suggestions: HELP_PROMPTS,
     };
   }
 
   return {
-    content: "Try asking about projects, resume, skills, or contact.",
+    content: "Use the prompts below or open Projects/About.",
+    actions: [
+      { label: "Open Projects", href: "/projects" },
+      { label: "Open About", href: "/about" },
+    ],
     suggestions: DEFAULT_SUGGESTIONS,
   };
 };
 
 export const getPortfolioBotWelcome = (): PortfolioBotReply => ({
-  content:
-    `Hey. Try asking: ${HELP_PROMPTS.join(". ")}.`,
-  suggestions: DEFAULT_SUGGESTIONS,
+  content: "Hey.",
+  suggestions: HELP_PROMPTS,
 });

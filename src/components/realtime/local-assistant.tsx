@@ -246,10 +246,10 @@ const LocalAssistant = () => {
                           type="button"
                           onClick={() => sendMessage(suggestion)}
                           className={cn(
-                            "rounded-full border px-3 py-1.5 text-xs transition-colors",
+                            "rounded-full border px-3 py-1.5 text-xs transition-colors opacity-80",
                             THEME.border.primary,
                             THEME.text.secondary,
-                            THEME.bg.hover,
+                            "bg-transparent hover:opacity-100 hover:bg-background/60",
                           )}
                         >
                           {suggestion}
