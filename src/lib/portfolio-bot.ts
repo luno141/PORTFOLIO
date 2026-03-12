@@ -116,8 +116,7 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
 
   if (hasAny(input, ["hello", "hi", "hey", "yo"])) {
     return {
-      content:
-        "Hi. I am VikrantOS, a small local assistant wired into this portfolio. Ask me about projects, skills, availability, resume, or contact details.",
+      content: "Hey.",
       suggestions: DEFAULT_SUGGESTIONS,
     };
   }
@@ -282,25 +281,13 @@ export const getPortfolioBotReply = (rawInput: string): PortfolioBotReply => {
 
   if (hasAny(input, ["help", "what can you do"])) {
     return {
-      content:
-        "I can answer questions about Vikrant's projects, stack, resume, availability, and contact details. I can also point you to the exact case study page you want.",
+      content: "Ask about projects, resume, skills, availability, or contact.",
       suggestions: DEFAULT_SUGGESTIONS,
     };
   }
 
   return {
-    content:
-      "I do not have a smart answer for that yet. Ask me about projects, skills, resume, availability, or how to contact Vikrant.",
+    content: "Try asking about projects, resume, skills, or contact.",
     suggestions: DEFAULT_SUGGESTIONS,
   };
 };
-
-export const getPortfolioBotWelcome = (): PortfolioBotReply => ({
-  content:
-    "Hi. I am VikrantOS, a local portfolio assistant. Ask me about projects, skills, resume, availability, or contact details.",
-  actions: [
-    { label: "Open Projects", href: "/projects" },
-    { label: "Open Resume", href: config.resume },
-  ],
-  suggestions: DEFAULT_SUGGESTIONS,
-});

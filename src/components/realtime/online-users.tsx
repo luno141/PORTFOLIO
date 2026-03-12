@@ -64,8 +64,6 @@ const OnlineUsers = () => {
     currentUser?.id,
     msgs[msgs.length - 1]?.sessionId,
   );
-  const triggerCount =
-    unreads > 0 ? unreads : msgs.length > 0 ? msgs.length : users.length;
   const { typingUsers, handleTyping, getTypingText } = useTyping(
     socket,
     currentUser,
@@ -143,21 +141,6 @@ const OnlineUsers = () => {
                   <Bot className="w-6 h-6" />
                 )}
               </div>
-
-              {isRealtimeEnabled ? (
-                <span
-                  className={cn(
-                    "absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold transition-colors",
-                    unreads > 0
-                      ? "bg-green-500 text-white"
-                      : "bg-red-500 text-white",
-                  )}
-                >
-                  {triggerCount}
-                </span>
-              ) : (
-                <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-amber-500" />
-              )}
             </div>
           </Button>
         </PopoverTrigger>

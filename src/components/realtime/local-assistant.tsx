@@ -10,7 +10,6 @@ import { ChatInput } from "./components/chat-input";
 import { THEME } from "./constants";
 import {
   getPortfolioBotReply,
-  getPortfolioBotWelcome,
   type PortfolioBotAction,
 } from "@/lib/portfolio-bot";
 import { useSounds } from "./hooks/use-sounds";
@@ -23,7 +22,7 @@ type LocalAssistantMessage = {
   suggestions?: string[];
 };
 
-const STORAGE_KEY = "portfolio-local-assistant-messages";
+const STORAGE_KEY = "portfolio-local-assistant-messages-v2";
 
 const createMessage = (
   role: LocalAssistantMessage["role"],
@@ -38,20 +37,8 @@ const createMessage = (
   suggestions,
 });
 
-const createWelcomeMessage = () => {
-  const welcome = getPortfolioBotWelcome();
-  return createMessage(
-    "assistant",
-    welcome.content,
-    welcome.actions,
-    welcome.suggestions,
-  );
-};
-
 const LocalAssistant = () => {
-  const [messages, setMessages] = useState<LocalAssistantMessage[]>([
-    createWelcomeMessage(),
-  ]);
+  const [messages, setMessages] = useState<LocalAssistantMessage[]>([]);
   const [isThinking, setIsThinking] = useState(false);
   const [hasHydrated, setHasHydrated] = useState(false);
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -132,8 +119,7 @@ const LocalAssistant = () => {
       timeoutRef.current = null;
     }
 
-    const welcomeMessage = createWelcomeMessage();
-    setMessages([welcomeMessage]);
+    setMessages([]);
     setIsThinking(false);
     window.localStorage.removeItem(STORAGE_KEY);
   };
@@ -165,11 +151,7 @@ const LocalAssistant = () => {
             </div>
             <div className="space-y-1">
               <p className={cn("text-sm font-semibold", THEME.text.header)}>
-                VikrantOS
-              </p>
-              <p className={cn("text-xs leading-5", THEME.text.secondary)}>
-                Local portfolio assistant. No API, no backend, just your site
-                data and a small rule-based brain.
+                BT
               </p>
             </div>
           </div>
@@ -188,7 +170,7 @@ const LocalAssistant = () => {
 
       <ScrollArea className="h-[360px] flex-1" data-lenis-prevent>
         <div className="space-y-4 p-4">
-          {messages.map((message, index) => {
+          {messages.map((message) => {
             const isAssistant = message.role === "assistant";
             const isLastAssistant =
               isAssistant &&
@@ -285,8 +267,8 @@ const LocalAssistant = () => {
                 )}
               >
                 <div className="flex items-center gap-2">
-                  <span className={cn("text-sm", THEME.text.secondary)}>
-                    VikrantOS is thinking
+                    <span className={cn("text-sm", THEME.text.secondary)}>
+                    BT is thinking
                   </span>
                   <div className="flex items-center gap-1">
                     <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
@@ -309,13 +291,13 @@ const LocalAssistant = () => {
           THEME.text.secondary,
         )}
       >
-        Ask about projects, skills, resume, availability, or contact details.
+        &nbsp;
       </div>
 
       <ChatInput
         onSendMessage={sendMessage}
         onTyping={() => {}}
-        placeholder="Ask about projects, skills, resume..."
+        placeholder="Type a message..."
       />
     </div>
   );
