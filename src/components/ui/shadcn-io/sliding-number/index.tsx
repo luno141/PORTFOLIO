@@ -180,4 +180,4 @@ function SlidingNumber({
     </span>
   );
 }
-export { SlidingNumber, type SlidingNumberProps };
+export { SlidingNumber };

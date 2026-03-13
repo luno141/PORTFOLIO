@@ -5,7 +5,7 @@ export type Section =
   | "experience"
   | "projects"
   | "contact";
-export const STATES = {
+const STATES = {
   hero: {
     desktop: {
       scale: { x: 0.2, y: 0.2, z: 0.2 },

@@ -297,7 +297,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/solidity/solidity-original.svg",
   },
 };
-export type Experience = {
+type Experience = {
   id: number;
   startDate: string;
   endDate: string;

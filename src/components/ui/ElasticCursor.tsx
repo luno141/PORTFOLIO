@@ -114,17 +114,16 @@ function ElasticCursor() {
       const el = e.target as HTMLElement;
       const hoverElemRect = getRekt(el);
       if (hoverElemRect) {
-        const rect = el.getBoundingClientRect();
         setIsHovering(true);
         gsap.to(jellyRef.current, {
           rotate: 0,
           duration: 0,
         });
         gsap.to(jellyRef.current, {
-          width: el.offsetWidth + 20,
-          height: el.offsetHeight + 20,
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
+          width: hoverElemRect.width + 20,
+          height: hoverElemRect.height + 20,
+          x: hoverElemRect.left + hoverElemRect.width / 2,
+          y: hoverElemRect.top + hoverElemRect.height / 2,
           borderRadius: 10,
           duration: 1.5,
           ease: "elastic.out(1, 0.3)",

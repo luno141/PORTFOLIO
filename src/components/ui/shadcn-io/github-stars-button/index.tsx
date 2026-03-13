@@ -225,4 +225,4 @@ function GitHubStarsButton({
     </motion.a>
   );
 }
-export { GitHubStarsButton, type GitHubStarsButtonProps };
+export { GitHubStarsButton };

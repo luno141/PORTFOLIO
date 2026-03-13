@@ -1,4 +1,4 @@
-export type Project = {
+type Project = {
   id: string;
   title: string;
   category: string;
@@ -20,7 +20,7 @@ export type Project = {
   liveLabel?: string;
   accentClass: string;
 };
-export const projects: Project[] = [
+const projects: Project[] = [
   {
     id: "north-star",
     title: "North Star",

@@ -20,7 +20,7 @@ const INITIAL: PreloaderContextType = {
   loadingPercent: 0,
   bypassLoading: () => {},
 };
-export const preloaderContext = createContext<PreloaderContextType>(INITIAL);
+const preloaderContext = createContext<PreloaderContextType>(INITIAL);
 type PreloaderProps = {
   children: ReactNode;
   disabled?: boolean;

@@ -1,5 +1,5 @@
 import { config } from "@/data/config";
-import { projects } from "@/data/projects";
+import projects from "@/data/projects";
 
 export type PortfolioBotAction = {
   label: string;
@@ -7,7 +7,7 @@ export type PortfolioBotAction = {
   external?: boolean;
 };
 
-export type PortfolioBotReply = {
+type PortfolioBotReply = {
   content: string;
   actions?: PortfolioBotAction[];
   suggestions?: string[];
