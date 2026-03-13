@@ -1,48 +1,58 @@
-"use client";
-import React from "react";
-import { Button } from "../ui/button";
-import { SiGithub, SiInstagram, SiLinkedin, SiX } from "react-icons/si";
 import { config } from "@/data/config";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "../ui/button";
+import { SiGithub, SiInstagram, SiLinkedin, SiX } from "react-icons/si";
+
 const BUTTONS = [
   {
-    name: "Github",
+    name: "GitHub",
     href: config.social.github,
-    icon: <SiGithub size={"24"} color={"#fff"} />,
+    icon: SiGithub,
   },
   {
     name: "LinkedIn",
     href: config.social.linkedin,
-    icon: <SiLinkedin size={"24"} color={"#fff"} />,
+    icon: SiLinkedin,
   },
   {
     name: "Twitter",
     href: config.social.twitter,
-    icon: <SiX size={"24"} color={"#fff"} />,
+    icon: SiX,
   },
   {
     name: "Instagram",
     href: config.social.instagram,
-    icon: <SiInstagram size={"24"} color={"#fff"} />,
+    icon: SiInstagram,
   },
 ];
-const SocialMediaButtons = () => {
+
+function SocialMediaButtons() {
   const visibleButtons = BUTTONS.filter((button) => Boolean(button.href));
+
   return (
     <div className="z-10 flex items-center gap-1">
-      {visibleButtons.map((button) => (
-        <Button asChild variant="ghost" size="icon" key={button.name}>
+      {visibleButtons.map((button) => {
+        const Icon = button.icon;
+
+        return (
           <a
+            key={button.name}
             href={button.href}
             target="_blank"
             rel="noreferrer"
             aria-label={button.name}
             title={button.name}
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "icon" }),
+              "rounded-full text-foreground/75 hover:bg-background/70 hover:text-foreground",
+            )}
           >
-            {button.icon}
+            <Icon className="h-[18px] w-[18px]" />
           </a>
-        </Button>
-      ))}
+        );
+      })}
     </div>
   );
-};
+}
+
 export default SocialMediaButtons;
