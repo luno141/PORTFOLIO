@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { User } from "@/contexts/socketio";
 import { THEME } from "../constants";
 import { getAvatarUrl } from "@/lib/avatar";
+import Image from "next/image";
 
 const COLORS = [
   "#60a5fa",
@@ -78,8 +79,11 @@ export const EditProfileModal = ({
       >
         <div className="flex items-center gap-3 mb-4 pb-3 border-b border-black/10 dark:border-white/10 shrink-0">
           <div className="relative">
-            <img
+            <Image
               src={getAvatarUrl(avatarSeed)}
+              width={48}
+              height={48}
+              unoptimized
               alt="Preview"
               className="w-12 h-12 rounded-full ring-2 ring-offset-2 ring-offset-white dark:ring-offset-[#2b2d31]"
               style={
@@ -144,8 +148,11 @@ export const EditProfileModal = ({
                     )}
                     onClick={() => setAvatarSeed(seed)}
                   >
-                    <img
+                    <Image
                       src={getAvatarUrl(seed)}
+                      width={56}
+                      height={56}
+                      unoptimized
                       className="w-full h-full rounded-full"
                       style={{ backgroundColor: color }}
                       loading="lazy"

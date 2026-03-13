@@ -4,7 +4,8 @@ import { useMouse } from "@/hooks/use-mouse";
 import { useThrottle } from "@/hooks/use-throttle";
 import { getAvatarUrl } from "@/lib/avatar";
 import { MousePointer2 } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import Image from "next/image";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 const RemoteCursors = () => {
@@ -13,38 +14,39 @@ const RemoteCursors = () => {
   const { x, y } = useMouse({ allowPage: true });
   useEffect(() => {
     if (typeof window === "undefined" || !socket || isMobile) return;
-    socket.on("cursor-changed", (data) => {
+    const handleCursorChanged = (data: {
+      socketId: string;
+      pos: {
+        x: number;
+        y: number;
+      };
+    }) => {
       setUsers((prev: User[]) => {
         const newUsers = [...prev];
         const user = newUsers.find((u) => u.socketId === data.socketId);
         if (user) {
           user.posX = data.pos.x;
           user.posY = data.pos.y;
-        } else {
-          newUsers.push({
-            ...data,
-          });
         }
         return newUsers;
       });
-    });
-    socket.on("users-updated", (data: User[]) => {
-      setUsers(data);
-    });
-    return () => {
-      socket.off("cursor-changed");
     };
-  }, [socket, isMobile]);
-  const handleMouseMove = useThrottle((x, y) => {
+    socket.on("cursor-changed", handleCursorChanged);
+    return () => {
+      socket.off("cursor-changed", handleCursorChanged);
+    };
+  }, [isMobile, setUsers, socket]);
+  const emitMouseMove = useCallback((x: number, y: number) => {
     socket?.emit("cursor-change", {
       pos: { x, y },
       socketId: socket.id,
     });
-  }, 200);
+  }, [socket]);
+  const handleMouseMove = useThrottle(emitMouseMove, 200);
   useEffect(() => {
     if (isMobile) return;
     handleMouseMove(x, y);
-  }, [x, y, isMobile]);
+  }, [handleMouseMove, x, y, isMobile]);
   const users = Array.from(_users.values());
   return (
     <div
@@ -108,7 +110,7 @@ const Cursor = ({
         clearTimeout(t);
       }, timeToRead);
     }
-  }, [msgs]);
+  }, [msgs, socketId, users]);
   return (
     <motion.div
       animate={{
@@ -144,8 +146,11 @@ const Cursor = ({
           ease: "easeOut",
         }}
       >
-        <img
+        <Image
           src={getAvatarUrl(avatar)}
+          width={40}
+          height={40}
+          unoptimized
           alt=""
           className="w-10 h-10 rounded-full flex-shrink-0"
         />

@@ -54,7 +54,6 @@ const SocketContextProvider = ({ children }: { children: ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [msgs, setMsgs] = useState<Message[]>([]);
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const { toast } = useToast();
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_WS_URL) return;
@@ -67,6 +66,9 @@ const SocketContextProvider = ({ children }: { children: ReactNode }) => {
     socket.on("connect", () => {});
     socket.on("msgs-receive-init", (msgs) => {
       setMsgs(msgs);
+    });
+    socket.on("users-updated", (nextUsers: User[]) => {
+      setUsers(nextUsers);
     });
     socket.on("session", ({ sessionId }) => {
       localStorage.setItem(SESSION_ID_KEY, sessionId);
@@ -89,11 +91,10 @@ const SocketContextProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       socket.disconnect();
     };
-  }, []);
-  const currentUser = users.find((u) => u.socketId === socket?.id);
+  }, [toast]);
   return (
     <SocketContext.Provider
-      value={{ socket: socket, users, setUsers, msgs, isCurrentUser }}
+      value={{ socket: socket, users, setUsers, msgs, isCurrentUser: false }}
     >
       {children}
     </SocketContext.Provider>

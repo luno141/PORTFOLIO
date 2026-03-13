@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import {
   AnimatePresence,
@@ -16,12 +17,12 @@ const NyanCat = () => {
       id: string;
     }[]
   >([]);
-  const spawnDiv = () => {
+  const spawnDiv = React.useCallback(() => {
     const newDiv = {
       id: (Math.random() * 100000).toFixed(),
     };
     setDivs((prevDivs) => [...prevDivs, newDiv]);
-  };
+  }, []);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "n") spawnDiv();
@@ -30,7 +31,7 @@ const NyanCat = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  });
+  }, [spawnDiv]);
   return (
     <div className="fixed left-0 top-0 w-screen h-screen overflow-hidden z-[-1]">
       <AnimatePresence>
@@ -45,7 +46,7 @@ const NyanCat = () => {
             id={div.id}
             onClick={() => console.log("clicked")}
             onCompleted={() => {
-              setDivs(divs.filter((d) => d.id !== div.id));
+              setDivs((prevDivs) => prevDivs.filter((d) => d.id !== div.id));
             }}
           />
         ))}
@@ -61,7 +62,7 @@ const AnimatedDiv = ({
   onClick: () => void;
   onCompleted: () => void;
 }) => {
-  const randY = getRandomHeight();
+  const randY = React.useMemo(() => getRandomHeight(), []);
   const controls = useAnimationControls();
   React.useEffect(() => {
     controls.start({
@@ -69,7 +70,7 @@ const AnimatedDiv = ({
       y: randY,
       transition: { duration: 5, ease: "linear" },
     });
-  }, [controls]);
+  }, [controls, randY]);
   const handlePause = () => {
     onClick();
   };
@@ -81,8 +82,11 @@ const AnimatedDiv = ({
       onAnimationComplete={onCompleted}
       onClick={handlePause}
     >
-      <img
+      <Image
         src="/assets/nyan-cat.gif"
+        width={240}
+        height={160}
+        unoptimized
         className={cn("fixed z-10 h-40 w-auto")}
         alt="Nyan Cat"
       />

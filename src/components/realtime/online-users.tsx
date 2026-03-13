@@ -20,6 +20,7 @@ import { EditProfileModal } from "./components/edit-profile-modal";
 import { THEME } from "./constants";
 import { getAvatarUrl } from "@/lib/avatar";
 import LocalAssistant from "./local-assistant";
+import Image from "next/image";
 
 const OnlineUsers = () => {
   const { socket, users: _users, msgs } = useContext(SocketContext);
@@ -196,8 +197,12 @@ const OnlineUsers = () => {
                     title="Edit signature"
                   >
                     <div className="relative w-8 h-8">
-                      <img
+                      <Image
                         src={getAvatarUrl(currentUser.avatar)}
+                        width={32}
+                        height={32}
+                        unoptimized
+                        alt={currentUser.name}
                         className="w-full h-full rounded-full ring-1 ring-black/10 dark:ring-white/10"
                         style={{
                           backgroundColor: currentUser.color || "#60a5fa",

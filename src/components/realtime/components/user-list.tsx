@@ -8,6 +8,7 @@ import type { User } from "@/contexts/socketio";
 import type { Socket } from "socket.io-client";
 import { THEME } from "../constants";
 import { getAvatarUrl } from "@/lib/avatar";
+import Image from "next/image";
 
 interface UserListProps {
   users: User[];
@@ -98,8 +99,11 @@ const UserItem = ({
     >
       <div className="flex items-center gap-3 w-full">
         <div className="relative">
-          <img
+          <Image
             src={getAvatarUrl(user.avatar)}
+            width={32}
+            height={32}
+            unoptimized
             alt={user.name}
             className="w-8 h-8 rounded-full"
             style={{ backgroundColor: user.color || "#60a5fa" }}

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { Message, User } from "@/contexts/socketio";
 import { THEME } from "../constants";
 import { getAvatarUrl } from "@/lib/avatar";
+import Image from "next/image";
 
 interface ChatMessageListProps {
   msgs: Message[];
@@ -116,8 +117,11 @@ export const ChatMessageList = ({
               >
                 {showHeader ? (
                   <div className="relative w-10 h-10 flex-shrink-0 mt-0.5">
-                    <img
+                    <Image
                       src={getAvatarUrl(user?.avatar || msg.avatar)}
+                      width={40}
+                      height={40}
+                      unoptimized
                       alt={user?.name || msg.username}
                       className="w-10 h-10 rounded-full"
                       style={{

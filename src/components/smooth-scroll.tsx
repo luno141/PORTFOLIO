@@ -9,11 +9,10 @@ function SmoothScroll({ children, isInsideModal = false }: LenisProps) {
   const lenis = useLenis(({ scroll }) => {});
 
   useEffect(() => {
-    document.addEventListener("DOMContentLoaded", () => {
-      lenis?.stop();
-      lenis?.start();
-    });
-  }, []);
+    if (!lenis) return;
+    lenis.stop();
+    lenis.start();
+  }, [lenis]);
   return (
     <ReactLenis
       root

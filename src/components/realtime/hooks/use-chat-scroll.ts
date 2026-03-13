@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 export const useChatScroll = (
   isOpen: boolean,
   msgsLength: number,
@@ -13,7 +13,7 @@ export const useChatScroll = (
   useEffect(() => {
     isAtBottomRef.current = isAtBottom;
   }, [isAtBottom]);
-  const scrollToBottom = (smooth = true) => {
+  const scrollToBottom = useCallback((smooth = true) => {
     if (!chatContainer.current) return;
     const viewport = chatContainer.current.querySelector(
       "[data-radix-scroll-area-viewport]",
@@ -26,12 +26,12 @@ export const useChatScroll = (
       setUnreads(0);
       setShowScrollButton(false);
     }
-  };
+  }, []);
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => scrollToBottom(false), 100);
     }
-  }, [isOpen]);
+  }, [isOpen, scrollToBottom]);
   useEffect(() => {
     const container = chatContainer.current;
     if (!container) return;
@@ -62,7 +62,7 @@ export const useChatScroll = (
     } else {
       setUnreads((prev) => prev + 1);
     }
-  }, [msgsLength, currentUserId]);
+  }, [currentUserId, lastMsgSessionId, msgsLength, scrollToBottom]);
   return {
     chatContainer,
     showScrollButton,

@@ -60,9 +60,12 @@ export default function RadialMenu() {
     },
     [],
   );
-  const triggerConfetti = (x: number, y: number, item: MenuItem) => {
-    fireConfetti(x, y, item.emoji);
-  };
+  const triggerConfetti = useCallback(
+    (x: number, y: number, item: MenuItem) => {
+      fireConfetti(x, y, item.emoji);
+    },
+    [fireConfetti],
+  );
   useEffect(() => {
     if (!socket) return;
     const handleConfettiReceive = (data: {
@@ -142,7 +145,7 @@ export default function RadialMenu() {
       } else {
       }
     },
-    [triggerConfetti],
+    [socket, triggerConfetti],
   );
   const handleContextMenu = useCallback((e: MouseEvent) => {
     if (suppressMenuRef.current) {

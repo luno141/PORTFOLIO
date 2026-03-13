@@ -2,6 +2,7 @@
 import Particles from "@/components/Particles";
 import RemoteCursors from "@/components/realtime/remote-cursors";
 import EasterEggs from "@/components/easter-eggs";
+import TetrisLauncher from "@/components/play/tetris-launcher";
 import ElasticCursor from "@/components/ui/ElasticCursor";
 import RadialMenu from "@/components/radial-menu/index";
 export default function AppOverlays() {
@@ -15,6 +16,7 @@ export default function AppOverlays() {
       <EasterEggs />
       <ElasticCursor />
       <RadialMenu />
+      <TetrisLauncher />
     </>
   );
 }

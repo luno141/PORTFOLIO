@@ -68,30 +68,39 @@ function ElasticCursor() {
   const jellyRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
   const { x, y } = useMouse();
-  const pos = useInstance(() => ({ x: 0, y: 0 }));
-  const vel = useInstance(() => ({ x: 0, y: 0 }));
-  const set = useInstance<SetterMap>({});
+  const pos = useRef({ x: 0, y: 0 });
+  const vel = useRef({ x: 0, y: 0 });
+  const setters = useRef<SetterMap>({});
   useLayoutEffect(() => {
-    set.x = gsap.quickSetter(jellyRef.current, "x", "px");
-    set.y = gsap.quickSetter(jellyRef.current, "y", "px");
-    set.r = gsap.quickSetter(jellyRef.current, "rotate", "deg");
-    set.sx = gsap.quickSetter(jellyRef.current, "scaleX");
-    set.sy = gsap.quickSetter(jellyRef.current, "scaleY");
-    set.width = gsap.quickSetter(jellyRef.current, "width", "px");
+    setters.current.x = gsap.quickSetter(jellyRef.current, "x", "px");
+    setters.current.y = gsap.quickSetter(jellyRef.current, "y", "px");
+    setters.current.r = gsap.quickSetter(jellyRef.current, "rotate", "deg");
+    setters.current.sx = gsap.quickSetter(jellyRef.current, "scaleX");
+    setters.current.sy = gsap.quickSetter(jellyRef.current, "scaleY");
+    setters.current.width = gsap.quickSetter(jellyRef.current, "width", "px");
   }, []);
   const loop = useCallback(() => {
-    if (!set.width || !set.sx || !set.sy || !set.r) return;
-    var rotation = getAngle(+vel.x, +vel.y);
-    var scale = getScale(+vel.x, +vel.y);
+    const currentSetters = setters.current;
+    const currentPos = pos.current;
+    const currentVel = vel.current;
+    if (
+      !currentSetters.width ||
+      !currentSetters.sx ||
+      !currentSetters.sy ||
+      !currentSetters.r
+    )
+      return;
+    var rotation = getAngle(+currentVel.x, +currentVel.y);
+    var scale = getScale(+currentVel.x, +currentVel.y);
     if (!isHovering && !isLoading) {
-      runSetter(set.x, pos.x);
-      runSetter(set.y, pos.y);
-      runSetter(set.width, 50 + scale * 300);
-      runSetter(set.r, rotation);
-      runSetter(set.sx, 1 + scale);
-      runSetter(set.sy, 1 - scale * 2);
+      runSetter(currentSetters.x, currentPos.x);
+      runSetter(currentSetters.y, currentPos.y);
+      runSetter(currentSetters.width, 50 + scale * 300);
+      runSetter(currentSetters.r, rotation);
+      runSetter(currentSetters.sx, 1 + scale);
+      runSetter(currentSetters.sy, 1 - scale * 2);
     } else {
-      runSetter(set.r, 0);
+      runSetter(currentSetters.r, 0);
     }
   }, [isHovering, isLoading]);
   const [cursorMoved, setCursorMoved] = useState(false);
@@ -130,14 +139,14 @@ function ElasticCursor() {
       }
       const x = e.clientX;
       const y = e.clientY;
-      gsap.to(pos, {
+      gsap.to(pos.current, {
         x: x,
         y: y,
         duration: 1.5,
         ease: "elastic.out(1, 0.5)",
         onUpdate: () => {
-          vel.x = (x - pos.x) * 1.2;
-          vel.y = (y - pos.y) * 1.2;
+          vel.current.x = (x - pos.current.x) * 1.2;
+          vel.current.y = (y - pos.current.y) * 1.2;
         },
       });
       loop();
@@ -146,7 +155,7 @@ function ElasticCursor() {
     return () => {
       if (!isLoading) window.removeEventListener("mousemove", setFromEvent);
     };
-  }, [isLoading]);
+  }, [cursorMoved, isLoading, isMobile, loop]);
   useEffect(() => {
     if (!jellyRef.current) return;
     jellyRef.current.style.height = "2rem";
