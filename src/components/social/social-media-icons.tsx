@@ -30,7 +30,7 @@ function SocialMediaButtons() {
   const visibleButtons = BUTTONS.filter((button) => Boolean(button.href));
 
   return (
-    <div className="z-10 flex items-center gap-1">
+    <div className="relative z-[7] flex items-center gap-2">
       {visibleButtons.map((button) => {
         const Icon = button.icon;
 
@@ -44,10 +44,10 @@ function SocialMediaButtons() {
             title={button.name}
             className={cn(
               buttonVariants({ variant: "ghost", size: "icon" }),
-              "rounded-full text-foreground/75 hover:bg-background/70 hover:text-foreground",
+              "pointer-events-auto h-11 w-11 rounded-full border border-border/70 bg-background/70 text-foreground/80 shadow-[0_10px_25px_-18px_rgba(0,0,0,0.5)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-background hover:text-foreground dark:bg-black/30 dark:hover:bg-black/45",
             )}
           >
-            <Icon className="h-[18px] w-[18px]" />
+            <Icon className="h-5 w-5" />
           </a>
         );
       })}

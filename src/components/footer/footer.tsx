@@ -7,7 +7,7 @@ import { config } from "@/data/config";
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t border-border bg-background/45 px-4 py-6 backdrop-blur-sm sm:flex-row md:px-6 sm:justify-between">
+    <footer className="relative z-[6] flex w-full shrink-0 flex-col items-center gap-3 border-t border-border bg-background/55 px-4 py-6 backdrop-blur-sm sm:flex-row sm:justify-between md:px-6">
       <p className="text-xs text-muted-foreground">
         © {year} {config.author}. All rights reserved.
       </p>
