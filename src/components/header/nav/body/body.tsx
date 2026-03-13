@@ -1,83 +1,50 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import styles from "./style.module.scss";
-import { blur, translate } from "../../anim";
 import { Link as LinkType } from "@/types";
 import { cn } from "@/lib/utils";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import FunnyThemeToggle from "@/components/theme/funny-theme-toggle";
-interface SelectedLink {
-  isActive: boolean;
-  index: number;
-}
 interface BodyProps {
   links: LinkType[];
-  selectedLink: SelectedLink;
-  setSelectedLink: (selectedLink: SelectedLink) => void;
   setIsActive: (isActive: boolean) => void;
 }
-export default function Body({
-  links,
-  selectedLink,
-  setSelectedLink,
-  setIsActive,
-}: BodyProps) {
-  const params = useParams();
-  const [currentHref, setCurrentHref] = useState("/");
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const { pathname, hash } = window.location;
-    setCurrentHref(pathname + hash);
-  }, [params]);
-  const getChars = (word: string) => {
-    let chars: JSX.Element[] = [];
-    word.split("").forEach((char, i) => {
-      chars.push(
-        <motion.span
-          className="pointer-events-none"
-          custom={[i * 0.02, (word.length - i) * 0.01]}
-          variants={translate}
-          initial="initial"
-          animate="enter"
-          exit="exit"
-          key={char + i}
-        >
-          {char}
-        </motion.span>,
-      );
-    });
-    return chars;
-  };
+export default function Body({ links, setIsActive }: BodyProps) {
+  const pathname = usePathname();
   return (
-    <div className={cn(styles.body, "flex flex-col items-end md:flex-row")}>
-      <FunnyThemeToggle className="w-6 h-6 mr-6 flex md:hidden" />
+    <div className={styles.body}>
+      <div className={styles.mobileTheme}>
+        <FunnyThemeToggle className="flex h-6 w-6 md:hidden" />
+      </div>
       {links.map((link, index) => {
         const { title, href, target } = link;
+        const isActive =
+          href === "/"
+            ? pathname === "/"
+            : !href.startsWith("/#") && pathname === href;
         return (
           <Link
             key={`l_${index}`}
             href={href}
             target={target}
-            className="cursor-can-hover rounded-lg"
+            className={cn(
+              styles.link,
+              isActive && styles.active,
+              "cursor-can-hover",
+            )}
+            onClick={() => setIsActive(false)}
           >
-            <motion.p
-              className={cn(
-                "rounded-lg",
-                currentHref !== href ? "text-muted-foreground" : "underline",
-              )}
-              onClick={() => setIsActive(false)}
-              onMouseOver={() => setSelectedLink({ isActive: true, index })}
-              onMouseLeave={() => setSelectedLink({ isActive: false, index })}
-              variants={blur}
-              animate={
-                selectedLink.isActive && selectedLink.index !== index
-                  ? "open"
-                  : "closed"
-              }
+            <motion.span
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.35,
+                delay: 0.05 * index,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
-              {getChars(title)}
-            </motion.p>
+              {title}
+            </motion.span>
           </Link>
         );
       })}

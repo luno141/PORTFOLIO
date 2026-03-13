@@ -1,33 +1,44 @@
 .body {
   display: flex;
-  flex-wrap: wrap;
-  margin-top: 30px;
+  flex-direction: column;
+  gap: 8px;
+}
 
-  a {
+.mobileTheme {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 48px;
+  border-radius: 14px;
+  padding: 0 14px;
+  color: hsl(var(--foreground) / 0.78);
+  text-decoration: none;
+  text-transform: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background: hsl(var(--background) / 0.62);
     color: hsl(var(--foreground));
-    text-decoration: none;
-    text-transform: uppercase;
+    transform: translateX(2px);
   }
 
-  p {
-    margin: 0px;
-    display: flex;
-    overflow: hidden;
-    font-size: 32px;
-    padding-right: 30px;
-    padding-top: 10px;
-    font-weight: 350;
+  span {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
   }
 }
 
-@media only screen and (min-width: 1000px) {
-  .body {
-    max-width: 1200px;
-    margin-top: 80px;
-
-    p {
-      font-size: 5vw;
-      padding-right: 2vw;
-    }
-  }
+.active {
+  background: hsl(var(--background) / 0.72);
+  color: hsl(var(--foreground));
 }
