@@ -1,16 +1,15 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import styles from "./style.module.scss";
 import { opacity, background } from "./anim";
 import Nav from "./nav";
 import { cn } from "@/lib/utils";
 import FunnyThemeToggle from "../theme/funny-theme-toggle";
 import { Button } from "../ui/button";
-import { config } from "@/data/config";
 import OnlineUsers from "../realtime/online-users";
 import { GitHubStarsButton } from "../ui/shadcn-io/github-stars-button";
+import { config } from "@/data/config";
 interface HeaderProps {
   loader?: boolean;
 }
@@ -20,13 +19,8 @@ const Header = ({ loader }: HeaderProps) => {
     <motion.header
       className={cn(
         styles.header,
-        "transition-colors delay-100 duration-500 ease-in z-[1000]",
+        "z-[1000] transition-colors delay-100 duration-500 ease-in",
       )}
-      style={{
-        backgroundColor: isActive
-          ? "hsl(var(--background) / 0.82)"
-          : "hsl(var(--background) / 0.28)",
-      }}
       initial={{
         y: -80,
       }}
@@ -38,14 +32,13 @@ const Header = ({ loader }: HeaderProps) => {
         duration: 0.8,
       }}
     >
-      <div className={cn(styles.bar, "flex items-center justify-between")}>
-        <Link href="/" className="flex items-center justify-center">
-          <Button variant={"link"} className="text-md">
-            {config.author}
-          </Button>
-        </Link>
-
-        <div className="ml-auto flex items-center gap-2 md:gap-3">
+      <div
+        className={cn(
+          styles.bar,
+          "ml-auto flex w-fit items-center gap-2 rounded-2xl border border-border/60 bg-background/45 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.5)] backdrop-blur-xl md:gap-3",
+        )}
+      >
+        <div className="flex items-center gap-2 md:gap-3">
           <FunnyThemeToggle className="hidden h-6 w-6 md:flex" />
           <OnlineUsers />
           {config.githubUsername && config.githubRepo && (
@@ -54,13 +47,6 @@ const Header = ({ loader }: HeaderProps) => {
               repo={config.githubRepo}
             />
           )}
-
-          <Link href="/about" className="hidden md:block">
-            <Button variant="ghost" className="h-9 px-3">
-              About
-            </Button>
-          </Link>
-
           <Button
             variant={"ghost"}
             onClick={() => setIsActive(!isActive)}

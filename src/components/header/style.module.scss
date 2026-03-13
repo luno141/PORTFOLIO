@@ -2,14 +2,10 @@
   z-index: 9;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   width: 100%;
   box-sizing: border-box;
   padding: 15px;
-  border-bottom: 1px solid hsl(var(--border) / 0.35);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 12px 32px -28px rgba(0, 0, 0, 0.35);
 
   .background {
     background-color: hsl(var(--background));
@@ -31,13 +27,6 @@
 
     p {
       margin: 0px;
-    }
-
-    a {
-      text-decoration: none;
-      color: hsl(var(--foreground));
-      position: absolute;
-      left: 0;
     }
 
     .shopContainer {
