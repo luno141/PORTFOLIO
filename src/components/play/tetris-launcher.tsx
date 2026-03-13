@@ -171,6 +171,7 @@ const TetrisLauncher = () => {
   const [highScore, setHighScore] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [triggerBottomOffset, setTriggerBottomOffset] = useState(20);
 
   const boardRef = useRef(board);
   const currentPieceRef = useRef(currentPiece);
@@ -208,6 +209,33 @@ const TetrisLauncher = () => {
     if (storedScore) {
       setHighScore(Number(storedScore) || 0);
     }
+  }, []);
+
+  useEffect(() => {
+    const updateTriggerOffset = () => {
+      const footer = document.querySelector("footer");
+      if (!footer) {
+        setTriggerBottomOffset(20);
+        return;
+      }
+
+      const footerRect = footer.getBoundingClientRect();
+      const overlap = window.innerHeight - footerRect.top;
+      const nextOffset = overlap > 0 ? overlap + 20 : 20;
+
+      setTriggerBottomOffset((previous) =>
+        previous === nextOffset ? previous : nextOffset,
+      );
+    };
+
+    updateTriggerOffset();
+    window.addEventListener("scroll", updateTriggerOffset, { passive: true });
+    window.addEventListener("resize", updateTriggerOffset);
+
+    return () => {
+      window.removeEventListener("scroll", updateTriggerOffset);
+      window.removeEventListener("resize", updateTriggerOffset);
+    };
   }, []);
 
   const syncHighScore = useCallback((nextHighScore: number) => {
@@ -466,9 +494,10 @@ const TetrisLauncher = () => {
         <Button
           variant="outline"
           className={cn(
-            "surface-pill fixed bottom-5 right-5 z-[980] h-11 rounded-full border-border/80 bg-background/88 px-3.5 shadow-[0_18px_36px_-22px_rgba(34,25,16,0.45)] backdrop-blur-xl",
+            "surface-pill fixed right-5 z-[980] h-11 rounded-full border-border/80 bg-background/88 px-3.5 shadow-[0_18px_36px_-22px_rgba(34,25,16,0.45)] backdrop-blur-xl",
             "text-stone-900 hover:-translate-y-0.5 hover:bg-white hover:text-stone-950 dark:border-white/12 dark:bg-slate-950/82 dark:text-zinc-50 dark:hover:bg-white dark:hover:text-slate-950",
           )}
+          style={{ bottom: `${triggerBottomOffset}px` }}
         >
           <Gamepad2 className="mr-2 h-4 w-4" />
           Play
