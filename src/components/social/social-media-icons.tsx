@@ -4,7 +4,6 @@ import React, { useRef } from "react";
 import { Button } from "../ui/button";
 import { SiGithub, SiInstagram, SiLinkedin, SiX } from "react-icons/si";
 import { config } from "@/data/config";
-import Link from "next/link";
 const BUTTONS = [
   {
     name: "Github",
@@ -32,12 +31,20 @@ const SocialMediaButtons = () => {
   const show = useInView(ref, { once: true });
   const visibleButtons = BUTTONS.filter((button) => Boolean(button.href));
   return (
-    <div ref={ref} className="z-10">
+    <div ref={ref} className="z-10 flex items-center gap-1">
       {show &&
         visibleButtons.map((button) => (
-          <Link href={button.href} key={button.name} target="_blank">
-            <Button variant={"ghost"}>{button.icon}</Button>
-          </Link>
+          <Button asChild variant="ghost" size="icon" key={button.name}>
+            <a
+              href={button.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={button.name}
+              title={button.name}
+            >
+              {button.icon}
+            </a>
+          </Button>
         ))}
     </div>
   );
