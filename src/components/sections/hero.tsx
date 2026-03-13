@@ -89,7 +89,7 @@ const HeroSection = () => {
                 <BlurIn delay={1.2}>
                   <p
                     className={cn(
-                      "md:self-start md:mt-4 font-thin text-md text-stone-600 dark:text-zinc-400",
+                      "md:self-start md:mt-4 font-thin text-md text-stone-700 dark:text-zinc-300",
                       "cursor-default font-display sm:text-xl md:text-xl max-w-xl bg-clip-text",
                     )}
                   >
@@ -97,7 +97,7 @@ const HeroSection = () => {
                   </p>
                 </BlurIn>
                 <BlurIn delay={1.4}>
-                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-stone-700 dark:text-zinc-300">
+                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-stone-800 dark:text-zinc-200">
                     {config.availability.headline}
                   </p>
                 </BlurIn>

@@ -28,7 +28,7 @@ const config = {
   ],
   author: "Vikrant Dey",
   email: "deyvikrantofficial@gmail.com",
-  resume: "/assets/VikrantDey.pdf",
+  resume: "/assets/Resume.pdf",
   site: siteUrl,
   githubUsername: "luno141",
   githubRepo: "",

@@ -23,7 +23,9 @@ const Header = ({ loader }: HeaderProps) => {
         "transition-colors delay-100 duration-500 ease-in z-[1000]",
       )}
       style={{
-        background: isActive ? "hsl(var(--background) / .8)" : "transparent",
+        backgroundColor: isActive
+          ? "hsl(var(--background) / 0.82)"
+          : "hsl(var(--background) / 0.28)",
       }}
       initial={{
         y: -80,
@@ -43,38 +45,49 @@ const Header = ({ loader }: HeaderProps) => {
           </Button>
         </Link>
 
-        <FunnyThemeToggle className="w-6 h-6 mr-4 hidden md:flex" />
-        <OnlineUsers />
-        {config.githubUsername && config.githubRepo && (
-          <GitHubStarsButton
-            username={config.githubUsername}
-            repo={config.githubRepo}
-            className="mr-4"
-          />
-        )}
-        <Button
-          variant={"ghost"}
-          onClick={() => setIsActive(!isActive)}
-          className={cn(
-            styles.el,
-            "m-0 p-0 h-6 bg-transparent flex items-center justify-center",
+        <div className="ml-auto flex items-center gap-2 md:gap-3">
+          <FunnyThemeToggle className="hidden h-6 w-6 md:flex" />
+          <OnlineUsers />
+          {config.githubUsername && config.githubRepo && (
+            <GitHubStarsButton
+              username={config.githubUsername}
+              repo={config.githubRepo}
+            />
           )}
-        >
-          <div className="relative hidden md:flex items-center">
-            <motion.p
-              variants={opacity}
-              animate={!isActive ? "open" : "closed"}
-            >
-              Menu
-            </motion.p>
-            <motion.p variants={opacity} animate={isActive ? "open" : "closed"}>
-              Close
-            </motion.p>
-          </div>
-          <div
-            className={`${styles.burger} ${isActive ? styles.burgerActive : ""}`}
-          ></div>
-        </Button>
+
+          <Link href="/about" className="hidden md:block">
+            <Button variant="ghost" className="h-9 px-3">
+              About
+            </Button>
+          </Link>
+
+          <Button
+            variant={"ghost"}
+            onClick={() => setIsActive(!isActive)}
+            className={cn(
+              styles.el,
+              "m-0 flex h-9 items-center justify-center bg-transparent px-2",
+            )}
+          >
+            <div className="relative hidden md:flex items-center">
+              <motion.p
+                variants={opacity}
+                animate={!isActive ? "open" : "closed"}
+              >
+                Menu
+              </motion.p>
+              <motion.p
+                variants={opacity}
+                animate={isActive ? "open" : "closed"}
+              >
+                Close
+              </motion.p>
+            </div>
+            <div
+              className={`${styles.burger} ${isActive ? styles.burgerActive : ""}`}
+            ></div>
+          </Button>
+        </div>
       </div>
       <motion.div
         variants={background}

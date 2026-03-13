@@ -108,7 +108,7 @@ const OnlineUsers = () => {
           <Button
             variant="ghost"
             className={cn(
-              "mr-4 h-11 w-12 shadow-lg transition-all duration-300 z-50 p-0",
+              "z-50 h-11 w-12 p-0 shadow-lg transition-all duration-300",
               "bg-background/20 hover:bg-background/80 backdrop-blur-sm border-2 border-white/30 rounded-lg",
               isRealtimeEnabled &&
                 !isOpen &&
