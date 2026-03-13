@@ -13,14 +13,6 @@ import { useRouter } from "next/navigation";
 import { Section, getKeyboardState } from "./animated-background-config";
 import { useSounds } from "./realtime/hooks/use-sounds";
 gsap.registerPlugin(ScrollTrigger);
-
-const getSkillAccentColor = (skill: Skill | null, isDarkTheme: boolean) => {
-  if (!skill) return isDarkTheme ? "#f8fafc" : "#1f2937";
-  if (skill.color === "#ffffff") return isDarkTheme ? "#f8fafc" : "#475569";
-  if (skill.color === "#000000") return isDarkTheme ? "#e2e8f0" : "#111827";
-  return skill.color;
-};
-
 const AnimatedBackground = () => {
   const { isLoading, bypassLoading } = usePreloader();
   const { resolvedTheme } = useTheme();
@@ -42,8 +34,6 @@ const AnimatedBackground = () => {
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
   const router = useRouter();
   const isDarkTheme = resolvedTheme !== "light";
-  const shouldShowSkillOverlay = activeSection === "skills" && selectedSkill;
-  const skillAccentColor = getSkillAccentColor(selectedSkill, isDarkTheme);
   const handleMouseHover = (e: SplineEvent) => {
     if (!splineApp || selectedSkillRef.current?.name === e.target.name) return;
     if (e.target.name === "body" || e.target.name === "platform") {
@@ -313,8 +303,18 @@ const AnimatedBackground = () => {
       textMobileDark.visible = mDark;
       textMobileLight.visible = mLight;
     };
-    setVisibility(false, false, false, false);
-  }, [splineApp, activeSection, isDarkTheme, isMobile, selectedSkill]);
+    if (activeSection !== "skills") {
+      setVisibility(false, false, false, false);
+    } else if (isDarkTheme) {
+      isMobile
+        ? setVisibility(false, false, true, false)
+        : setVisibility(true, false, false, false);
+    } else {
+      isMobile
+        ? setVisibility(false, false, false, true)
+        : setVisibility(false, true, false, false);
+    }
+  }, [isDarkTheme, splineApp, isMobile, activeSection]);
   useEffect(() => {
     if (!selectedSkill || !splineApp) return;
     splineApp.setVariable("heading", selectedSkill.label);
@@ -399,57 +399,14 @@ const AnimatedBackground = () => {
   }
   return (
     <Suspense fallback={null}>
-      <>
-        <Spline
-          className="fixed z-[1] h-full w-full"
-          onLoad={(app: Application) => {
-            setSplineApp(app);
-            bypassLoading();
-          }}
-          scene="/assets/skills-keyboard.spline"
-        />
-        <div
-          className={[
-            "pointer-events-none fixed inset-x-0 z-[2] px-4 transition-all duration-300",
-            shouldShowSkillOverlay
-              ? "translate-y-0 opacity-100"
-              : "translate-y-3 opacity-0",
-            isMobile ? "bottom-28 flex justify-center" : "top-[26vh] flex justify-center",
-          ].join(" ")}
-          aria-hidden={!shouldShowSkillOverlay}
-        >
-          <div
-            className={[
-              "w-full max-w-xl rounded-[28px] border px-5 py-4 backdrop-blur-xl",
-              "bg-stone-50/86 text-stone-950 shadow-[0_24px_60px_-32px_rgba(74,47,20,0.34)]",
-              "dark:border-white/18 dark:bg-slate-950/82 dark:text-white dark:shadow-[0_24px_60px_-34px_rgba(0,0,0,0.78)]",
-            ].join(" ")}
-            style={{
-              borderColor: isDarkTheme
-                ? "rgba(255,255,255,0.18)"
-                : "rgba(41,31,24,0.14)",
-              boxShadow: isDarkTheme
-                ? `0 24px 60px -34px rgba(0, 0, 0, 0.78), 0 0 0 1px ${skillAccentColor}2e`
-                : `0 24px 60px -32px rgba(74, 47, 20, 0.34), 0 0 0 1px ${skillAccentColor}22`,
-            }}
-          >
-            <div className="flex items-start gap-3">
-              <span
-                className="mt-1 h-3 w-3 flex-none rounded-full shadow-[0_0_18px_currentColor]"
-                style={{ backgroundColor: skillAccentColor, color: skillAccentColor }}
-              />
-              <div className="min-w-0">
-                <p className="text-[1.35rem] font-semibold tracking-tight text-stone-950 dark:text-white md:text-[1.9rem] dark:[text-shadow:0_1px_14px_rgba(255,255,255,0.12)]">
-                  {selectedSkill?.label}
-                </p>
-                <p className="mt-1 text-sm leading-relaxed text-stone-700 dark:text-zinc-50 md:text-base dark:[text-shadow:0_1px_10px_rgba(255,255,255,0.08)]">
-                  {selectedSkill?.shortDescription}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
+      <Spline
+        className="fixed z-[1] h-full w-full"
+        onLoad={(app: Application) => {
+          setSplineApp(app);
+          bypassLoading();
+        }}
+        scene="/assets/skills-keyboard.spline"
+      />
     </Suspense>
   );
 };
