@@ -9,9 +9,9 @@
   padding: 15px;
 
   .background {
-    background-color: hsl(var(--background) / 0.82);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    background-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     height: 100dvh;
     width: 100vw;
     position: fixed;
