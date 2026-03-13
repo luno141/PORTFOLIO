@@ -19,7 +19,7 @@ const Header = ({ loader }: HeaderProps) => {
     <motion.header
       className={cn(
         styles.header,
-        "z-[1000] transition-colors delay-100 duration-500 ease-in",
+        "pointer-events-none z-[1000] transition-colors delay-100 duration-500 ease-in",
       )}
       initial={{
         y: -80,
@@ -35,7 +35,7 @@ const Header = ({ loader }: HeaderProps) => {
       <div
         className={cn(
           styles.bar,
-          "ml-auto flex w-fit items-center gap-2 rounded-2xl border border-border/60 bg-background/45 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.5)] backdrop-blur-xl md:gap-3",
+          "pointer-events-auto relative z-[3] ml-auto flex w-fit items-center gap-2 rounded-2xl border border-border/60 bg-background/45 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.5)] backdrop-blur-xl md:gap-3",
         )}
       >
         <div className="flex items-center gap-2 md:gap-3">
@@ -80,6 +80,8 @@ const Header = ({ loader }: HeaderProps) => {
         initial="initial"
         animate={isActive ? "open" : "closed"}
         className={styles.background}
+        onClick={() => setIsActive(false)}
+        style={{ pointerEvents: isActive ? "auto" : "none" }}
       ></motion.div>
       <AnimatePresence mode="wait">
         {isActive && <Nav setIsActive={setIsActive} />}

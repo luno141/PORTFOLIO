@@ -105,7 +105,7 @@ const HeroSection = () => {
                   {config.statusHighlights.map((item) => (
                     <span
                       key={item}
-                      className="surface-pill rounded-full border border-border bg-background/70 px-3 py-1 text-xs text-muted-foreground backdrop-blur-sm"
+                      className="surface-pill rounded-full border border-border/80 bg-background/80 px-3 py-1 text-xs text-stone-800 backdrop-blur-sm dark:text-zinc-100"
                     >
                       {item}
                     </span>
