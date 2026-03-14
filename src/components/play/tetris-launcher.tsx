@@ -487,6 +487,7 @@ const TetrisLauncher = () => {
   const nextPieceShape = TETROMINOES[nextPieceType].shape;
   const nextPiecePreviewOffset = getPreviewOffset(nextPieceShape);
   const canResume = Boolean(currentPiece) && !isGameOver;
+  const displayHighScore = Math.max(highScore, score);
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
@@ -563,9 +564,13 @@ const TetrisLauncher = () => {
             </section>
 
             <aside className="space-y-4 p-4 md:p-5">
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid gap-2.5 sm:grid-cols-3">
                 <StatCard label="Score" value={score.toLocaleString()} />
                 <StatCard label="Level" value={String(level)} />
+                <StatCard
+                  label="High Score"
+                  value={displayHighScore.toLocaleString()}
+                />
               </div>
 
               <div className="grid gap-4 xl:grid-cols-[180px_minmax(0,1fr)]">
