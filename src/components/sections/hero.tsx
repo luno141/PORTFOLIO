@@ -37,14 +37,14 @@ const HeroSection = () => {
     },
   ].filter((link) => Boolean(link.href));
   return (
-    <SectionWrapper id="hero" className={cn("relative w-full h-screen")}>
+    <SectionWrapper id="hero" className={cn("relative w-full min-h-[100svh]")}>
       <div className="grid md:grid-cols-2">
         <div
           className={cn(
-            "h-[calc(100dvh-3rem)] md:h-[calc(100dvh-4rem)] z-[2]",
+            "min-h-[calc(100svh-3rem)] md:min-h-[calc(100dvh-4rem)] z-[2]",
             "col-span-1",
             "flex flex-col justify-start md:justify-center items-center md:items-start",
-            "pt-28 sm:pb-16 md:p-20 lg:p-24 xl:p-28",
+            "px-6 pt-28 pb-16 sm:px-8 md:p-20 lg:p-24 xl:p-28",
           )}
         >
           {!isLoading && (
@@ -68,7 +68,7 @@ const HeroSection = () => {
                       <h1
                         className={cn(
                           "-ml-[6px] leading-none font-thin text-transparent text-stone-800 text-left",
-                          "font-thin text-7xl md:text-7xl lg:text-8xl xl:text-9xl",
+                          "font-thin text-[clamp(4.5rem,14vw,8.75rem)]",
                           "cursor-default text-edge-outline font-display ",
                         )}
                       >
@@ -89,15 +89,15 @@ const HeroSection = () => {
                 <BlurIn delay={1.2}>
                   <p
                     className={cn(
-                      "md:self-start md:mt-4 font-thin text-md text-stone-700 dark:text-zinc-300",
-                      "cursor-default font-display sm:text-xl md:text-xl max-w-xl bg-clip-text",
+                      "md:self-start md:mt-4 text-stone-700 dark:text-zinc-300",
+                      "cursor-default font-display text-base sm:text-lg md:text-xl max-w-xl bg-clip-text",
                     )}
                   >
                     {config.headline}
                   </p>
                 </BlurIn>
                 <BlurIn delay={1.4}>
-                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-stone-800 dark:text-zinc-200">
+                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-stone-800 dark:text-zinc-200 sm:text-base">
                     {config.availability.headline}
                   </p>
                 </BlurIn>

@@ -1,17 +1,21 @@
 .header {
   z-index: 9;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
+  top: 15px;
+  right: 15px;
+  left: auto;
+  width: auto;
+  max-width: calc(100vw - 30px);
   box-sizing: border-box;
-  padding: 15px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0;
 
   .background {
     background-color: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    height: 100svh;
     height: 100dvh;
     width: 100vw;
     position: fixed;
@@ -27,6 +31,9 @@
     font-size: 12px;
     font-weight: 400;
     position: relative;
+    width: max-content;
+    max-width: 100%;
+    overflow: visible;
 
     p {
       margin: 0px;
@@ -113,5 +120,13 @@
       display: block;
       cursor: pointer;
     }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .header {
+    top: 12px;
+    right: 12px;
+    max-width: calc(100vw - 24px);
   }
 }

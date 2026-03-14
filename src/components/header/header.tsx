@@ -7,7 +7,6 @@ import Nav from "./nav";
 import { cn } from "@/lib/utils";
 import FunnyThemeToggle from "../theme/funny-theme-toggle";
 import { Button } from "../ui/button";
-import OnlineUsers from "../realtime/online-users";
 import { GitHubStarsButton } from "../ui/shadcn-io/github-stars-button";
 import { config } from "@/data/config";
 interface HeaderProps {
@@ -35,16 +34,16 @@ const Header = ({ loader }: HeaderProps) => {
       <div
         className={cn(
           styles.bar,
-          "pointer-events-auto relative z-[3] ml-auto flex w-fit items-center gap-2 rounded-2xl border border-border/60 bg-background/45 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.5)] backdrop-blur-xl md:gap-3",
+          "pointer-events-auto relative z-[3] flex max-w-[calc(100vw-1.5rem)] w-fit flex-nowrap items-center gap-2 overflow-x-auto rounded-2xl border border-border/60 bg-background/80 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.5)] backdrop-blur-xl md:max-w-[calc(100vw-2rem)] md:gap-3",
         )}
-      >
+        >
         <div className="flex items-center gap-2 md:gap-3">
           <FunnyThemeToggle className="hidden h-6 w-6 md:flex" />
-          <OnlineUsers />
           {config.githubUsername && config.githubRepo && (
             <GitHubStarsButton
               username={config.githubUsername}
               repo={config.githubRepo}
+              className="hidden xl:flex"
             />
           )}
           <Button

@@ -134,7 +134,17 @@ function GitHubStarsButton({
     },
     [handleDisplayParticles, repoUrl],
   );
-  if (isLoading) return null;
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          "h-10 min-w-[108px] rounded-lg border-2 border-black/15 bg-background/45 opacity-70 dark:border-white/15 dark:bg-white/[0.03]",
+          className,
+        )}
+        aria-hidden="true"
+      />
+    );
+  }
   return (
     <motion.a
       href={repoUrl}
