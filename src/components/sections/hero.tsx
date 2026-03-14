@@ -3,11 +3,6 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import { BriefcaseBusiness, File, FolderKanban } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { usePreloader } from "../preloader";
 import { BlurIn, BoxReveal } from "../reveal-animations";
 import ScrollDownIcon from "../scroll-down-icon";
@@ -63,27 +58,17 @@ const HeroSection = () => {
                 </BlurIn>
 
                 <BlurIn delay={1}>
-                  <Tooltip delayDuration={300}>
-                    <TooltipTrigger asChild>
-                      <h1
-                        className={cn(
-                          "-ml-[6px] leading-none font-thin text-transparent text-stone-800 text-left",
-                          "font-thin text-[clamp(4.5rem,14vw,8.75rem)]",
-                          "cursor-default text-edge-outline font-display ",
-                        )}
-                      >
-                        {firstName}
-                        {remainingName && <br className="md:block hiidden" />}
-                        {remainingName}
-                      </h1>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      className="dark:bg-white dark:text-black"
-                    >
-                      there is something waiting for you in devtools
-                    </TooltipContent>
-                  </Tooltip>
+                  <h1
+                    className={cn(
+                      "-ml-[6px] leading-none font-thin text-transparent text-stone-800 text-left",
+                      "font-thin text-[clamp(4.5rem,14vw,8.75rem)]",
+                      "cursor-default text-edge-outline font-display ",
+                    )}
+                  >
+                    {firstName}
+                    {remainingName && <br className="md:block hiidden" />}
+                    {remainingName}
+                  </h1>
                 </BlurIn>
 
                 <BlurIn delay={1.2}>
