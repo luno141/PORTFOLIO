@@ -18,7 +18,7 @@ const ContactForm = () => {
   const [email, setEmail] = React.useState("");
   const [focus, setFocus] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [emailEnabled, setEmailEnabled] = React.useState(true);
+  const [emailEnabled, setEmailEnabled] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [submitState, setSubmitState] = React.useState<
     "idle" | "success" | "error"
@@ -35,7 +35,10 @@ const ContactForm = () => {
           cache: "no-store",
         });
 
-        if (!res.ok) return;
+        if (!res.ok) {
+          if (mounted) setEmailEnabled(false);
+          return;
+        }
 
         const data = (await res.json()) as { enabled?: boolean };
 
@@ -43,7 +46,7 @@ const ContactForm = () => {
           setEmailEnabled(data.enabled);
         }
       } catch {
-        return;
+        if (mounted) setEmailEnabled(false);
       }
     };
 
@@ -73,8 +76,20 @@ const ContactForm = () => {
           message,
         }),
       });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      const contentType = res.headers.get("content-type") || "";
+      const payload = contentType.includes("application/json")
+        ? await res.json()
+        : await res.text();
+
+      if (!res.ok) {
+        const errorMessage =
+          typeof payload === "string"
+            ? payload
+            : payload?.error || "Something went wrong. Please try again.";
+
+        throw new Error(errorMessage);
+      }
+
       setSubmitState("success");
       setFeedbackMessage(
         "Message sent. I will get back to you as soon as possible.",
@@ -97,6 +112,14 @@ const ContactForm = () => {
       setLoading(false);
     }
   };
+
+  if (emailEnabled === null) {
+    return (
+      <div className="rounded-2xl border border-border bg-background/60 px-4 py-4 text-sm text-muted-foreground">
+        Checking contact form availability...
+      </div>
+    );
+  }
 
   if (!emailEnabled) {
     return (

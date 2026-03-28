@@ -1,7 +1,7 @@
-import { EmailTemplate } from "@/components/email-template";
 import { config } from "@/data/config";
-import { Resend } from "resend";
+import { NextResponse } from "next/server";
 import { z } from "zod";
+
 const Email = z.object({
   fullName: z.string().min(2, "Full name is invalid!"),
   email: z.string().email({ message: "Email is invalid!" }),
@@ -9,8 +9,10 @@ const Email = z.object({
   message: z.string().min(10, "Message is too short!"),
 });
 
+export const runtime = "nodejs";
+
 export async function GET() {
-  return Response.json(
+  return NextResponse.json(
     { enabled: Boolean(process.env.RESEND_API_KEY) },
     {
       headers: {
@@ -29,13 +31,19 @@ export async function POST(req: Request) {
       error: zodError,
     } = Email.safeParse(body);
     if (!zodSuccess)
-      return Response.json({ error: zodError?.message }, { status: 400 });
+      return NextResponse.json({ error: zodError?.message }, { status: 400 });
     if (!process.env.RESEND_API_KEY) {
-      return Response.json(
+      return NextResponse.json(
         { error: "Missing RESEND_API_KEY" },
         { status: 500 },
       );
     }
+
+    const [{ Resend }, { EmailTemplate }] = await Promise.all([
+      import("resend"),
+      import("@/components/email-template"),
+    ]);
+
     const resend = new Resend(process.env.RESEND_API_KEY);
     const fromEmail =
       process.env.RESEND_FROM_EMAIL || "Portfolio <onboarding@resend.dev>";
@@ -55,10 +63,21 @@ export async function POST(req: Request) {
       }),
     });
     if (resendError) {
-      return Response.json({ resendError }, { status: 500 });
+      return NextResponse.json(
+        { error: resendError.message || "Failed to send email" },
+        { status: 500 },
+      );
     }
-    return Response.json(resendData);
+    return NextResponse.json(resendData);
   } catch (error) {
-    return Response.json({ error }, { status: 500 });
+    console.error("Contact form submission failed", error);
+
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Internal server error",
+      },
+      { status: 500 },
+    );
   }
 }
